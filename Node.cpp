@@ -1,6 +1,6 @@
 // Kaustav Vats (2016048)
-// Anubhav Jaiswal ()
-// Arhsdeep ()
+// Anubhav Jaiswal (2016014)
+// Arshdeep Singh (2016018)
 
 #include <iostream>
 #include <cstring>
