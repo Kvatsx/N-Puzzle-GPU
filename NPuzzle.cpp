@@ -64,9 +64,9 @@ int main(int argc, char const *argv[]) {
     Node root;
     Fill(&root, 0, 0, Start, NULL);
     // toString(&root);
-    // BFS(root);
+    BFS(root);
     // Node Temp[4];
-    GetNeighbours(&root);
+    // GetNeighbours(&root);
 
     return 0;
 }

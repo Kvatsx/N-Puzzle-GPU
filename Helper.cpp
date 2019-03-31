@@ -108,7 +108,8 @@ void temp_display(int data[N][N]) {
  * Return: Add all Neighbours in 2nd Argument
  */
 void GetNeighbours(Node * currentNode) {
-    Node neighbours[4];
+    Node * neighbours;
+    neighbours = (Node *) malloc(sizeof(Node) * 4);
     int x, y;
     FindZeros(currentNode->Data, &x, &y);
     cout << "Zero Coordinates\nX: " << x << "\tY: " << y << endl;
