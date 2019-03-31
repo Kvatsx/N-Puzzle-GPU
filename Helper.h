@@ -25,7 +25,7 @@ void toString(Node * node);
 
 void Fill(Node * node, int dt, int hd, int data[N][N], Node * link);
 
-void DeepcopyData(Node node, int copy[N][N]);
+void DeepcopyData(Node * node, int copy[N][N]);
 
 void UpdateHD(Node * node);
 
@@ -33,7 +33,7 @@ void FindZeros(int data[N][N], int * x, int * y);
 
 void temp_display(int data[N][N]);
 
-void GetNeighbours(Node currentNode, Node * neighbours);
+void GetNeighbours(Node * currentNode);
 
 
 

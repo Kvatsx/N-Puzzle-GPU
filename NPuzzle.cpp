@@ -32,9 +32,8 @@ void BFS(Node root) {
         Node CurrentNode;
         CurrentNode = Q.front();
         Q.pop();
-        cout << "LOL\n";
-        Node Temp[4];
-        GetNeighbours(CurrentNode, Temp);
+
+        GetNeighbours(&CurrentNode);
         toString(&CurrentNode);
         for(int i=0; i<4; i++) {
             // if (CurrentNode.Link[i] == 0){
@@ -64,10 +63,10 @@ int main(int argc, char const *argv[]) {
         };
     Node root;
     Fill(&root, 0, 0, Start, NULL);
-    toString(&root);
+    // toString(&root);
     // BFS(root);
     // Node Temp[4];
-    // GetNeighbours(root, Temp);
+    GetNeighbours(&root);
 
     return 0;
 }

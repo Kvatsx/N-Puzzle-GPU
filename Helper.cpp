@@ -55,10 +55,10 @@ void Fill(Node * node, int dt, int hd, int data[N][N], Node * link) {
  * node: Original Node.
  * copy: Copy data.
  */
-void DeepcopyData(Node node, int copy[N][N]) {
+void DeepcopyData(Node * node, int copy[N][N]) {
     for (int i=0; i<N; i++) {
         for (int j=0; j<N; j++) {
-            copy[i][j] = node.Data[i][j];
+            copy[i][j] = node->Data[i][j];
         }
     }
 }
@@ -107,10 +107,10 @@ void temp_display(int data[N][N]) {
  * Case 3: When 0 in anywhere except above above possible cases
  * Return: Add all Neighbours in 2nd Argument
  */
-void GetNeighbours(Node currentNode, Node * neighbours) {
-    // Node neighbours[4];
+void GetNeighbours(Node * currentNode) {
+    Node neighbours[4];
     int x, y;
-    FindZeros(currentNode.Data, &x, &y);
+    FindZeros(currentNode->Data, &x, &y);
     cout << "Zero Coordinates\nX: " << x << "\tY: " << y << endl;
 
     // Case 1: Corner 1, 2, 3, 4
@@ -120,7 +120,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x][y+1];
         Temp[x][y+1] = 0;
         Node n1;
-        Fill(&n1, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n1, currentNode->DT+1, -1, Temp, NULL);
         Temp[x][y+1] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[0] = n1;
@@ -128,14 +128,14 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x+1][y];
         Temp[x+1][y] = 0;
         Node n2;
-        Fill(&n2, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n2, currentNode->DT+1, -1, Temp, NULL);
         Temp[x+1][y] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[1] = n2;
         neighbours[2] = {0};
         neighbours[3] = {0};
-        currentNode.Link = neighbours;
-        toString(&currentNode);
+        currentNode->Link = neighbours;
+        toString(currentNode);
     }
     else if (x == 0 && y == N-1) {
         // Need to repeat same for rest of the conditions
@@ -144,7 +144,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x][y-1];
         Temp[x][y-1] = 0;
         Node n1;
-        Fill(&n1, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n1, currentNode->DT+1, -1, Temp, NULL);
         Temp[x][y-1] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[0] = n1;
@@ -152,14 +152,14 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x+1][y];
         Temp[x+1][y] = 0;
         Node n2;
-        Fill(&n2, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n2, currentNode->DT+1, -1, Temp, NULL);
         Temp[x+1][y] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[1] = n2;
         neighbours[2] = {0};
         neighbours[3] = {0};
-        currentNode.Link = neighbours;
-        toString(&currentNode);
+        currentNode->Link = neighbours;
+        toString(currentNode);
     }
     else if (x == N-1 && y == 0) {
         int Temp[N][N];
@@ -167,7 +167,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x][y+1];
         Temp[x][y+1] = 0;
         Node n1;
-        Fill(&n1, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n1, currentNode->DT+1, -1, Temp, NULL);
         Temp[x][y+1] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[0] = n1;
@@ -175,14 +175,14 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x-1][y];
         Temp[x-1][y] = 0;
         Node n2;
-        Fill(&n2, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n2, currentNode->DT+1, -1, Temp, NULL);
         Temp[x-1][y] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[1] = n2;
         neighbours[2] = {0};
         neighbours[3] = {0};
-        currentNode.Link = neighbours;
-        toString(&currentNode);
+        currentNode->Link = neighbours;
+        toString(currentNode);
     }
     else if (x == N-1 && y == N-1) {
         int Temp[N][N];
@@ -190,7 +190,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x][y-1];
         Temp[x][y-1] = 0;
         Node n1;
-        Fill(&n1, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n1, currentNode->DT+1, -1, Temp, NULL);
         Temp[x][y-1] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[0] = n1;
@@ -198,14 +198,14 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x-1][y];
         Temp[x-1][y] = 0;
         Node n2;
-        Fill(&n2, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n2, currentNode->DT+1, -1, Temp, NULL);
         Temp[x-1][y] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[1] = n2;
         neighbours[2] = {0};
         neighbours[3] = {0};
-        currentNode.Link = neighbours;
-        toString(&currentNode);
+        currentNode->Link = neighbours;
+        toString(currentNode);
     }
     // Case 2: Edge 1, 2, 3, 4
     else if (x == 0) {
@@ -214,7 +214,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x][y+1];
         Temp[x][y+1] = 0;
         Node n1;
-        Fill(&n1, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n1, currentNode->DT+1, -1, Temp, NULL);
         Temp[x][y+1] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[0] = n1;
@@ -222,7 +222,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x][y-1];
         Temp[x][y-1] = 0;
         Node n2;
-        Fill(&n2, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n2, currentNode->DT+1, -1, Temp, NULL);
         Temp[x][y-1] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[1] = n2;
@@ -230,13 +230,13 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x+1][y];
         Temp[x+1][y] = 0;
         Node n3;
-        Fill(&n3, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n3, currentNode->DT+1, -1, Temp, NULL);
         Temp[x+1][y] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[2] = n3;
         neighbours[3] = {0};    
-        currentNode.Link = neighbours;
-        toString(&currentNode);
+        currentNode->Link = neighbours;
+        toString(currentNode);
 
     }
     else if (y == 0) {
@@ -245,7 +245,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x][y+1];
         Temp[x][y+1] = 0;
         Node n1;
-        Fill(&n1, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n1, currentNode->DT+1, -1, Temp, NULL);
         Temp[x][y+1] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[0] = n1;
@@ -253,7 +253,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x-1][y];
         Temp[x-1][y] = 0;
         Node n2;
-        Fill(&n2, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n2, currentNode->DT+1, -1, Temp, NULL);
         Temp[x-1][y] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[1] = n2;
@@ -261,13 +261,13 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x+1][y];
         Temp[x+1][y] = 0;
         Node n3;
-        Fill(&n3, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n3, currentNode->DT+1, -1, Temp, NULL);
         Temp[x+1][y] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[2] = n3;
         neighbours[3] = {0};    
-        currentNode.Link = neighbours;
-        toString(&currentNode);
+        currentNode->Link = neighbours;
+        toString(currentNode);
 
     }
     else if (x == N-1) {
@@ -276,7 +276,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x][y+1];
         Temp[x][y+1] = 0;
         Node n1;
-        Fill(&n1, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n1, currentNode->DT+1, -1, Temp, NULL);
         Temp[x][y+1] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[0] = n1;
@@ -284,7 +284,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x][y-1];
         Temp[x][y-1] = 0;
         Node n2;
-        Fill(&n2, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n2, currentNode->DT+1, -1, Temp, NULL);
         Temp[x][y-1] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[1] = n2;
@@ -292,13 +292,13 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x-1][y];
         Temp[x-1][y] = 0;
         Node n3;
-        Fill(&n3, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n3, currentNode->DT+1, -1, Temp, NULL);
         Temp[x-1][y] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[2] = n3;
         neighbours[3] = {0};
-        currentNode.Link = neighbours;
-        toString(&currentNode);
+        currentNode->Link = neighbours;
+        toString(currentNode);
     }
     else if (y == N-1) {
         int Temp[N][N];
@@ -306,7 +306,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x+1][y];
         Temp[x+1][y] = 0;
         Node n1;
-        Fill(&n1, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n1, currentNode->DT+1, -1, Temp, NULL);
         Temp[x+1][y] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[0] = n1;
@@ -314,7 +314,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x][y-1];
         Temp[x][y-1] = 0;
         Node n2;
-        Fill(&n2, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n2, currentNode->DT+1, -1, Temp, NULL);
         Temp[x][y-1] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[1] = n2;
@@ -322,13 +322,13 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x-1][y];
         Temp[x-1][y] = 0;
         Node n3;
-        Fill(&n3, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n3, currentNode->DT+1, -1, Temp, NULL);
         Temp[x-1][y] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[2] = n3;
         neighbours[3] = {0};
-        currentNode.Link = neighbours;
-        toString(&currentNode);
+        currentNode->Link = neighbours;
+        toString(currentNode);
     }
     // Case 3: Tile 0 Anywhere, except above possible location.
     else {
@@ -337,7 +337,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x+1][y];
         Temp[x+1][y] = 0;
         Node n1;
-        Fill(&n1, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n1, currentNode->DT+1, -1, Temp, NULL);
         Temp[x+1][y] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[0] = n1;
@@ -345,7 +345,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x][y-1];
         Temp[x][y-1] = 0;
         Node n2;
-        Fill(&n2, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n2, currentNode->DT+1, -1, Temp, NULL);
         Temp[x][y-1] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[1] = n2;
@@ -353,7 +353,7 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x-1][y];
         Temp[x-1][y] = 0;
         Node n3;
-        Fill(&n3, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n3, currentNode->DT+1, -1, Temp, NULL);
         Temp[x-1][y] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[2] = n3;
@@ -361,12 +361,12 @@ void GetNeighbours(Node currentNode, Node * neighbours) {
         Temp[x][y] = Temp[x][y+1];
         Temp[x][y+1] = 0;
         Node n4;
-        Fill(&n4, currentNode.DT+1, -1, Temp, NULL);
+        Fill(&n4, currentNode->DT+1, -1, Temp, NULL);
         Temp[x][y+1] = Temp[x][y];
         Temp[x][y] = 0;
         neighbours[3] = n4;
-        currentNode.Link = neighbours;
-        toString(&currentNode);
+        currentNode->Link = neighbours;
+        toString(currentNode);
     }
 
     return;
