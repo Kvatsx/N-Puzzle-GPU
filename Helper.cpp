@@ -65,11 +65,34 @@ void DeepcopyData(Node * node, int copy[N][N]) {
     }
 }
 
-// TODO: Need to implement Heuristic Function
-void UpdateHD(Node * node) {
-    int x[N*N];
-    int y[N*N];
-    // TODO:
+int getIndexInState(int pos, int state[N][N]) {
+    for(int i=0; i<N; i++) {
+        for(int j=0; j<N; j++) {
+            if(state[i][j] == pos) {
+                return i*N + j;
+            }
+        }
+    }
+}
+
+
+/*
+ * node: Node from which the heuristic distance needs to be calculated
+ * finalState: the final state array of the problem
+ * Returns: The heuristic distance from the givn node state to the final state
+ */
+int UpdateHD(Node node, int finalState[N][N]) {
+    int sum = 0;
+    for(int i=0; i<N; i++) {
+        for(int j=0; j<N; j++) {
+            int pos = i*N + j;
+            int b = getIndexInState(pos, node.Data);
+            int g = getIndexInState(pos, finalState);
+            sum += abs(b % N - g % N);
+            sum += abs(b / N - g / N);
+        }
+    }
+    return sum;
 }
 
 /*

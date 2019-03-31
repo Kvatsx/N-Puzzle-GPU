@@ -2,7 +2,8 @@
 #define HELPER_H
 
 // Size of the Grid
-#define N 3  
+#define N 3 
+#define FINAL_STATE {{0, 1, 2},{3, 4, 5},{6, 7, 8}} 
 
 /* 
  * Structure of the node
@@ -19,6 +20,12 @@ struct Node {
     int HD;
     int Data[N][N];
     Node * Link;
+ //    bool operator<(const Node &o) {
+	//     int finalState[N][N] = FINAL_STATE;
+	//     int tSum = UpdateHD(this, finalState) + DT;
+	//     int oSum = UpdateHD(o, finalState) + o.DT;
+	//     return tSum < oSum;
+	// }
 };
 
 void toString(Node * node);
@@ -27,7 +34,7 @@ void Fill(Node * node, int dt, int hd, int data[N][N], Node * link);
 
 void DeepcopyData(Node * node, int copy[N][N]);
 
-void UpdateHD(Node * node);
+int UpdateHD(const Node node, int FinalState[N][N]);
 
 void FindZeros(int data[N][N], int * x, int * y);
 

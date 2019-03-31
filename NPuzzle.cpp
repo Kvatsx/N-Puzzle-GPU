@@ -5,10 +5,19 @@
 #include <iostream>
 #include <cstring>
 #include <bits/stdc++.h> 
-#include <queue> 
 #include "Helper.h"
 
 using namespace std;
+
+class HeuristicFunctionClass {
+public:
+    bool operator() (Node left, Node right) {
+        int finalState[N][N] = FINAL_STATE;
+        int leftSum = UpdateHD(left, finalState) + left.DT;
+        int rightSum = UpdateHD(right, finalState) + right.DT;
+        return leftSum > rightSum;
+    }
+};
    
 /*
  * Notes:
@@ -83,8 +92,38 @@ void BFS(Node root, int finalState[N][N]) {
 }
 
 // TODO: A* Algorithm
-void AStar() {
+void AStar(Node root, int finalState[N][N]) {
+    cout << "----------AStar--------" << endl;
+    map<string, int> Visited;
+    Visited.insert({root.UID, 1});
+    // cout << "Found: " << Visited.find({root.UID})->first << endl;
+    // return;
+    priority_queue<Node, vector<Node>, HeuristicFunctionClass> Q;
+    
+    Q.push(root);
+    int steps = 0;
 
+    while(Q.size() > 0) {
+        Node CurrentNode;
+        CurrentNode = Q.top();
+        Q.pop();
+        cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
+        steps++;
+        if (checkSolution(&CurrentNode, finalState) == 0) {
+            cout << "No of steps:\t" << steps << endl;
+            return;
+        }
+
+        GetNeighbours(&CurrentNode);
+        for(int i=0; i<4; i++) {
+            if (CurrentNode.Link[i].DT != 0) {
+                if (Visited.find(CurrentNode.Link[i].UID) == Visited.end()) {
+                    Q.push(CurrentNode.Link[i]);
+                    Visited.insert({CurrentNode.Link[i].UID, 1});
+                }
+            }
+        }
+    }
 }
 
 // TODO: IDA* Algorithm
@@ -99,16 +138,14 @@ int main(int argc, char const *argv[]) {
         {6, 7, 8}
     };
 
-    int FinalState[N][N] = {
-        {0, 1, 2},
-        {3, 4, 5},
-        {6, 7, 8}
-    };
-    Node root;
+    int FinalState[N][N] = FINAL_STATE;
+    Node root, final;
     Fill(&root, 0, 0, Start, NULL);
+    Fill(&final, 0, 0, FinalState, NULL);
 
     BFS(root, FinalState);
     DFS(root, FinalState);
+    AStar(root, FinalState);
 
     return 0;
 }

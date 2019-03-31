@@ -1,7 +1,12 @@
 all: NPuzzle
 
 NPuzzle: NPuzzle.o Helper.o
-	g++ -o NPuzzle NPuzzle.o Helper.o -g 
+	g++ -g -o NPuzzle NPuzzle.o Helper.o
+NPuzzle.o:
+	g++ -c -std=c++11 -o NPuzzle.o NPuzzle.cpp
+Helper.o:
+	g++ -c -std=c++11 -o Helper.o Helper.cpp
+run:
 	./NPuzzle
 
 clean:
