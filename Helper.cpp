@@ -29,7 +29,9 @@ void toString(Node * node) {
     }
     if (node->Link != NULL) {
         for (int i=0; i<4; i++) {
-            cout << "[" << i << "]\t" << node->Link[i].UID << endl;
+            if (node->Link[i].DT != 0) {
+                cout << "[" << i << "]\t" << node->Link[i].UID << endl;
+            }
         }
     }   
 }
@@ -112,7 +114,7 @@ void GetNeighbours(Node * currentNode) {
     neighbours = (Node *) malloc(sizeof(Node) * 4);
     int x, y;
     FindZeros(currentNode->Data, &x, &y);
-    cout << "Zero Coordinates\nX: " << x << "\tY: " << y << endl;
+    // cout << "Zero Coordinates\nX: " << x << "\tY: " << y << endl;
 
     // Case 1: Corner 1, 2, 3, 4
     if (x == 0 && y == 0) {
@@ -136,7 +138,7 @@ void GetNeighbours(Node * currentNode) {
         neighbours[2] = {0};
         neighbours[3] = {0};
         currentNode->Link = neighbours;
-        toString(currentNode);
+        // toString(currentNode);
     }
     else if (x == 0 && y == N-1) {
         // Need to repeat same for rest of the conditions
@@ -160,7 +162,7 @@ void GetNeighbours(Node * currentNode) {
         neighbours[2] = {0};
         neighbours[3] = {0};
         currentNode->Link = neighbours;
-        toString(currentNode);
+        // toString(currentNode);
     }
     else if (x == N-1 && y == 0) {
         int Temp[N][N];
@@ -183,7 +185,7 @@ void GetNeighbours(Node * currentNode) {
         neighbours[2] = {0};
         neighbours[3] = {0};
         currentNode->Link = neighbours;
-        toString(currentNode);
+        // toString(currentNode);
     }
     else if (x == N-1 && y == N-1) {
         int Temp[N][N];
@@ -206,7 +208,7 @@ void GetNeighbours(Node * currentNode) {
         neighbours[2] = {0};
         neighbours[3] = {0};
         currentNode->Link = neighbours;
-        toString(currentNode);
+        // toString(currentNode);
     }
     // Case 2: Edge 1, 2, 3, 4
     else if (x == 0) {
@@ -237,7 +239,7 @@ void GetNeighbours(Node * currentNode) {
         neighbours[2] = n3;
         neighbours[3] = {0};    
         currentNode->Link = neighbours;
-        toString(currentNode);
+        // toString(currentNode);
 
     }
     else if (y == 0) {
@@ -268,7 +270,7 @@ void GetNeighbours(Node * currentNode) {
         neighbours[2] = n3;
         neighbours[3] = {0};    
         currentNode->Link = neighbours;
-        toString(currentNode);
+        // toString(currentNode);
 
     }
     else if (x == N-1) {
@@ -299,7 +301,7 @@ void GetNeighbours(Node * currentNode) {
         neighbours[2] = n3;
         neighbours[3] = {0};
         currentNode->Link = neighbours;
-        toString(currentNode);
+        // toString(currentNode);
     }
     else if (y == N-1) {
         int Temp[N][N];
@@ -329,7 +331,7 @@ void GetNeighbours(Node * currentNode) {
         neighbours[2] = n3;
         neighbours[3] = {0};
         currentNode->Link = neighbours;
-        toString(currentNode);
+        // toString(currentNode);
     }
     // Case 3: Tile 0 Anywhere, except above possible location.
     else {
@@ -367,8 +369,23 @@ void GetNeighbours(Node * currentNode) {
         Temp[x][y] = 0;
         neighbours[3] = n4;
         currentNode->Link = neighbours;
-        toString(currentNode);
+        // toString(currentNode);
     }
 
     return;
+}
+
+/*
+ * This function check if current state is the final state or not.
+ * Returns: 1 if states does not match, On correct match returns 0
+ */
+int checkSolution(Node * node, int FinalState[N][N]) {
+    for (int i=0; i<N; i++) {
+        for (int j=0; j<N; j++) {
+            if (node->Data[i][j] != FinalState[i][j]) {
+                return 1;
+            }
+        }
+    }
+    return 0;
 }

@@ -35,6 +35,6 @@ void temp_display(int data[N][N]);
 
 void GetNeighbours(Node * currentNode);
 
-
+int checkSolution(Node * node, int FinalState[N][N]);
 
 #endif

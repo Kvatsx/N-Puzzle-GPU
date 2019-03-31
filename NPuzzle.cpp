@@ -15,34 +15,71 @@ using namespace std;
  * 1. 0 is denoted as blank tile.
  */
 
-// TODO: Need to implement DFS Algorithm
-void DFS() {
+void DFS(Node root, int finalState[N][N]) {
+    cout << "----------DFS--------" << endl;
+    map<string, int> Visited;
+    stack<Node> S;
 
+    S.push(root);
+    int steps = 0;
+
+    while(!S.empty()) {
+        Node CurrentNode;
+        CurrentNode = S.top();
+        S.pop();
+        Visited.insert({CurrentNode.UID, 1});
+
+        cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
+        steps++;
+        if (checkSolution(&CurrentNode, finalState) == 0) {
+            cout << "No of steps:\t" << steps << endl;
+            return;
+        }
+
+        GetNeighbours(&CurrentNode);
+        for(int i=0; i<4; i++) {
+            if (CurrentNode.Link[i].DT != 0) {
+                if (Visited.find(CurrentNode.Link[i].UID) == Visited.end()) {
+                    S.push(CurrentNode.Link[i]);
+                }
+            }
+        }
+
+    }
 }
 
-// TODO: BFS Algorithm
-void BFS(Node root) {
+void BFS(Node root, int finalState[N][N]) {
+    cout << "----------BFS--------" << endl;
     map<string, int> Visited;
     Visited.insert({root.UID, 1});
+    // cout << "Found: " << Visited.find({root.UID})->first << endl;
+    // return;
     queue<Node> Q;
     
     Q.push(root);
+    int steps = 0;
 
     while(Q.size() > 0) {
         Node CurrentNode;
         CurrentNode = Q.front();
         Q.pop();
-
-        GetNeighbours(&CurrentNode);
-        toString(&CurrentNode);
-        for(int i=0; i<4; i++) {
-            // if (CurrentNode.Link[i] == 0){
-            //     break;
-            // }
+        cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
+        steps++;
+        if (checkSolution(&CurrentNode, finalState) == 0) {
+            cout << "No of steps:\t" << steps << endl;
+            return;
         }
 
+        GetNeighbours(&CurrentNode);
+        for(int i=0; i<4; i++) {
+            if (CurrentNode.Link[i].DT != 0) {
+                if (Visited.find(CurrentNode.Link[i].UID) == Visited.end()) {
+                    Q.push(CurrentNode.Link[i]);
+                    Visited.insert({CurrentNode.Link[i].UID, 1});
+                }
+            }
+        }
     }
-
 }
 
 // TODO: A* Algorithm
@@ -57,16 +94,21 @@ void IDAStar() {
 
 int main(int argc, char const *argv[]) {
     int Start[N][N] = {
-        {2, 3, 6},
-        {5, 1, 0},
-        {8, 7, 4}
-        };
+        {1, 4, 2},
+        {3, 0, 5},
+        {6, 7, 8}
+    };
+
+    int FinalState[N][N] = {
+        {0, 1, 2},
+        {3, 4, 5},
+        {6, 7, 8}
+    };
     Node root;
     Fill(&root, 0, 0, Start, NULL);
-    // toString(&root);
-    BFS(root);
-    // Node Temp[4];
-    // GetNeighbours(&root);
+
+    BFS(root, FinalState);
+    DFS(root, FinalState);
 
     return 0;
 }
