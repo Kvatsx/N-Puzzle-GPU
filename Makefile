@@ -1,6 +1,8 @@
-all:
-	g++ Node.cpp -g 
-	./a.out
-	
+all: NPuzzle
+
+NPuzzle: NPuzzle.o Helper.o
+	g++ -o NPuzzle NPuzzle.o Helper.o -g 
+	./NPuzzle
+
 clean:
-	rm a.out
+	rm -f NPuzzle.o Helper.o NPuzzle *~
