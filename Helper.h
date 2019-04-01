@@ -2,7 +2,7 @@
 #define HELPER_H
 
 // Size of the Grid
-#define N 3
+#define N 4
 
 /* 
  * Structure of the node
