@@ -75,7 +75,6 @@ int getIndexInState(int pos, int state[N][N]) {
     }
 }
 
-
 /*
  * node: Node from which the heuristic distance needs to be calculated
  * finalState: the final state array of the problem

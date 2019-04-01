@@ -5,9 +5,11 @@
 #include <iostream>
 #include <cstring>
 #include <bits/stdc++.h> 
+#include <chrono>
 #include "Helper.h"
 
 using namespace std;
+using namespace std::chrono; 
 
 class HeuristicFunctionClass {
 public:
@@ -180,10 +182,26 @@ int main(int argc, char const *argv[]) {
     Fill(&root, 0, 0, Start, NULL);
     Fill(&final, 0, 0, FinalState, NULL);
 
-    BFS(root, FinalState);
-    DFS(root, FinalState);
-    AStar(root, FinalState);
-    IDAStar(root, FinalState);
+    void (*solveFunctionSet[])(Node, int[N][N]) = {
+        BFS,
+        DFS,
+        AStar,
+        IDAStar
+    };
+
+    int solverCount = sizeof(solveFunctionSet)/sizeof(*solveFunctionSet);
+    for(int i=0; i<solverCount; i++) {
+        auto start = high_resolution_clock::now(); 
+
+        // call the function
+        (*solveFunctionSet[i])(root, FinalState);
+
+        auto stop = high_resolution_clock::now(); 
+        auto duration = duration_cast<microseconds>(stop - start);
+        cout << "Time taken: " << duration.count() << "ms" << endl;
+
+        cout << endl;
+    }
 
     return 0;
 }
