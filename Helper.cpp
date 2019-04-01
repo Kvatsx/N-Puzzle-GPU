@@ -41,7 +41,7 @@ void toString(Node * node) {
  */
 void Fill(Node * node, int dt, int hd, int data[N][N], Node * link) {
     node->DT = dt;
-    node->HD = hd;
+    node->HD = -1;
     for(int i=0; i<N; i++) {
         for(int j=0; j<N; j++) {
             node->Data[i][j] = data[i][j];
@@ -81,18 +81,33 @@ int getIndexInState(int pos, int state[N][N]) {
  * finalState: the final state array of the problem
  * Returns: The heuristic distance from the givn node state to the final state
  */
-int UpdateHD(Node node, int finalState[N][N]) {
+void UpdateHD(Node& node, int finalState[N][N]) {
+    if(node.HD > -1) {
+        return;
+    }
+
     int sum = 0;
+    int nodeArr[N*N], finalArr[N*N];
     for(int i=0; i<N; i++) {
         for(int j=0; j<N; j++) {
             int pos = i*N + j;
-            int b = getIndexInState(pos, node.Data);
-            int g = getIndexInState(pos, finalState);
-            sum += abs(b % N - g % N);
-            sum += abs(b / N - g / N);
+            nodeArr[node.Data[i][j]] = pos;
+            finalArr[finalState[i][j]] = pos;
+            // cout << node.Data[i][j] << " " << pos << endl;
+            // int b = getIndexInState(pos, node.Data);
+            // int g = getIndexInState(pos, finalState);
+            // sum += abs(b % N - g % N);
+            // sum += abs(b / N - g / N);
         }
     }
-    return sum;
+
+    for(int i=1; i<N*N; i++){
+        int b = nodeArr[i];
+        int g = finalArr[i];
+        sum += abs(b % N - g % N);
+        sum += abs(b / N - g / N);
+    }
+    node.HD = sum;
 }
 
 /*

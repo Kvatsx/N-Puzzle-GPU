@@ -11,10 +11,12 @@ using namespace std;
 
 class HeuristicFunctionClass {
 public:
-    bool operator() (Node left, Node right) {
+    bool operator() (Node& left, Node& right) {
         int finalState[N][N] = FINAL_STATE;
-        int leftSum = UpdateHD(left, finalState) + left.DT;
-        int rightSum = UpdateHD(right, finalState) + right.DT;
+        UpdateHD(left, finalState);
+        UpdateHD(right, finalState);
+        int leftSum = left.HD + left.DT;
+        int rightSum = right.HD + right.DT;
         return leftSum > rightSum;
     }
 };
@@ -46,7 +48,7 @@ void DFS(Node root, int finalState[N][N]) {
         }
 
         GetNeighbours(&CurrentNode);
-        for(int i=0; i<4; i++) {
+        for(int i=3; i>0; i--) {
             if (CurrentNode.Link[i].DT != 0) {
                 if (Visited.find(CurrentNode.Link[i].UID) == Visited.end()) {
                     S.push(CurrentNode.Link[i]);
@@ -127,7 +129,42 @@ void AStar(Node root, int finalState[N][N]) {
 }
 
 // TODO: IDA* Algorithm
-void IDAStar() {
+void IDAStar(Node root, int finalState[N][N]) {
+
+    cout << "----------IDAStar--------" << endl;
+    map<string, int> Visited;
+    stack<Node> S;
+
+    S.push(root);
+    UpdateHD(root, finalState);
+    int threshold = root.HD;
+    int steps = 0;
+
+    while(!S.empty()) {
+        Node CurrentNode;
+        CurrentNode = S.top();
+        S.pop();
+        Visited.insert({CurrentNode.UID, 1});
+
+        cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
+        steps++;
+        if (checkSolution(&CurrentNode, finalState) == 0) {
+            cout << "No of steps:\t" << steps << endl;
+            return;
+        }
+
+        GetNeighbours(&CurrentNode);
+        for(int i=3; i>0; i--) {
+            // cout << "sdf " << CurrentNode.Link[i].UID << endl;
+            if (CurrentNode.Link[i].DT != 0 && CurrentNode.Link[i].DT < threshold+1) {
+                if (Visited.find(CurrentNode.Link[i].UID) == Visited.end()) {
+                    S.push(CurrentNode.Link[i]);
+                }
+            }
+        }
+
+    }
+
 
 }
 
@@ -146,6 +183,7 @@ int main(int argc, char const *argv[]) {
     BFS(root, FinalState);
     DFS(root, FinalState);
     AStar(root, FinalState);
+    IDAStar(root, FinalState);
 
     return 0;
 }

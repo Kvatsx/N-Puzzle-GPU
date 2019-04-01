@@ -34,7 +34,7 @@ void Fill(Node * node, int dt, int hd, int data[N][N], Node * link);
 
 void DeepcopyData(Node * node, int copy[N][N]);
 
-int UpdateHD(const Node node, int FinalState[N][N]);
+void UpdateHD(Node& node, int FinalState[N][N]);
 
 void FindZeros(int data[N][N], int * x, int * y);
 
