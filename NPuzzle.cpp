@@ -8,6 +8,7 @@
 #include <chrono>
 #include "Helper.h"
 
+#define FINAL_STATE {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}}
 using namespace std;
 using namespace std::chrono; 
 
@@ -29,7 +30,7 @@ public:
  */
 
 void DFS(Node root, int finalState[N][N]) {
-    cout << "----------DFS--------" << endl;
+    cout << "DFS:" << endl;
     map<string, int> Visited;
     stack<Node> S;
 
@@ -42,15 +43,15 @@ void DFS(Node root, int finalState[N][N]) {
         S.pop();
         Visited.insert({CurrentNode.UID, 1});
 
-        cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
+        // cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
         steps++;
         if (checkSolution(&CurrentNode, finalState) == 0) {
-            cout << "No of steps:\t" << steps << endl;
+            cout << "No of nodes visited:\t" << steps << endl;
             return;
         }
 
         GetNeighbours(&CurrentNode);
-        for(int i=3; i>0; i--) {
+        for(int i=3; i>=0; i--) {
             if (CurrentNode.Link[i].DT != 0) {
                 if (Visited.find(CurrentNode.Link[i].UID) == Visited.end()) {
                     S.push(CurrentNode.Link[i]);
@@ -62,7 +63,7 @@ void DFS(Node root, int finalState[N][N]) {
 }
 
 void BFS(Node root, int finalState[N][N]) {
-    cout << "----------BFS--------" << endl;
+    cout << "BFS:" << endl;
     map<string, int> Visited;
     Visited.insert({root.UID, 1});
     // cout << "Found: " << Visited.find({root.UID})->first << endl;
@@ -76,10 +77,10 @@ void BFS(Node root, int finalState[N][N]) {
         Node CurrentNode;
         CurrentNode = Q.front();
         Q.pop();
-        cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
+        // cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
         steps++;
         if (checkSolution(&CurrentNode, finalState) == 0) {
-            cout << "No of steps:\t" << steps << endl;
+            cout << "No of nodes visited:\t" << steps << endl;
             return;
         }
 
@@ -97,7 +98,7 @@ void BFS(Node root, int finalState[N][N]) {
 
 // TODO: A* Algorithm
 void AStar(Node root, int finalState[N][N]) {
-    cout << "----------AStar--------" << endl;
+    cout << "A*:" << endl;
     map<string, int> Visited;
     Visited.insert({root.UID, 1});
     // cout << "Found: " << Visited.find({root.UID})->first << endl;
@@ -111,10 +112,10 @@ void AStar(Node root, int finalState[N][N]) {
         Node CurrentNode;
         CurrentNode = Q.top();
         Q.pop();
-        cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
+        // cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
         steps++;
         if (checkSolution(&CurrentNode, finalState) == 0) {
-            cout << "No of steps:\t" << steps << endl;
+            cout << "No of nodes visited:\t" << steps << endl;
             return;
         }
 
@@ -133,7 +134,7 @@ void AStar(Node root, int finalState[N][N]) {
 // TODO: IDA* Algorithm
 void IDAStar(Node root, int finalState[N][N]) {
 
-    cout << "----------IDAStar--------" << endl;
+    cout << "IDA*:" << endl;
     map<string, int> Visited;
     stack<Node> S;
 
@@ -148,15 +149,15 @@ void IDAStar(Node root, int finalState[N][N]) {
         S.pop();
         Visited.insert({CurrentNode.UID, 1});
 
-        cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
+        // cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
         steps++;
         if (checkSolution(&CurrentNode, finalState) == 0) {
-            cout << "No of steps:\t" << steps << endl;
+            cout << "No of nodes visited:\t" << steps << endl;
             return;
         }
 
         GetNeighbours(&CurrentNode);
-        for(int i=3; i>0; i--) {
+        for(int i=3; i>=0; i--) {
             // cout << "sdf " << CurrentNode.Link[i].UID << endl;
             if (CurrentNode.Link[i].DT != 0 && CurrentNode.Link[i].DT < threshold+1) {
                 if (Visited.find(CurrentNode.Link[i].UID) == Visited.end()) {
@@ -172,8 +173,8 @@ void IDAStar(Node root, int finalState[N][N]) {
 
 int main(int argc, char const *argv[]) {
     int Start[N][N] = {
-        {1, 4, 2},
-        {3, 0, 5},
+        {1, 0, 2},
+        {3, 4, 5},
         {6, 7, 8}
     };
 
@@ -198,7 +199,7 @@ int main(int argc, char const *argv[]) {
 
         auto stop = high_resolution_clock::now(); 
         auto duration = duration_cast<microseconds>(stop - start);
-        cout << "Time taken: " << duration.count() << "ms" << endl;
+        cout << "Time taken: " << duration.count() << " us" << endl;
 
         cout << endl;
     }

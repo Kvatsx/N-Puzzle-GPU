@@ -2,8 +2,7 @@
 #define HELPER_H
 
 // Size of the Grid
-#define N 3 
-#define FINAL_STATE {{0, 1, 2},{3, 4, 5},{6, 7, 8}} 
+#define N 3
 
 /* 
  * Structure of the node
@@ -15,7 +14,7 @@
  * Link: Stores Next possible states.
 */
 struct Node {
-    char UID[N*N+1];
+    char UID[2*N*N+1];
     int DT;
     int HD;
     int Data[N][N];

@@ -45,10 +45,11 @@ void Fill(Node * node, int dt, int hd, int data[N][N], Node * link) {
     for(int i=0; i<N; i++) {
         for(int j=0; j<N; j++) {
             node->Data[i][j] = data[i][j];
-            node->UID[N*i + j] = data[i][j] + '0';
+            node->UID[2*(N*i + j)] = data[i][j] + '0';
+            node->UID[2*(N*i + j)+1] = ' ';
         }
     }
-    node->UID[N*N] = '\0';
+    node->UID[2*N*N] = '\0';
     node->Link = link;
 }
 
@@ -85,11 +86,18 @@ void UpdateHD(Node& node, int finalState[N][N]) {
         return;
     }
 
-    int sum = 0;
+    // for(int i=0; i<N; i++) {
+    //     for(int j=0; j<N; j++) {
+    //         cout << node.Data[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
+
     int nodeArr[N*N], finalArr[N*N];
     for(int i=0; i<N; i++) {
         for(int j=0; j<N; j++) {
             int pos = i*N + j;
+            // cout << pos << " " << node.Data[i][j] << endl;
             nodeArr[node.Data[i][j]] = pos;
             finalArr[finalState[i][j]] = pos;
             // cout << node.Data[i][j] << " " << pos << endl;
@@ -100,13 +108,14 @@ void UpdateHD(Node& node, int finalState[N][N]) {
         }
     }
 
+    int HDvalue = 0;
     for(int i=1; i<N*N; i++){
         int b = nodeArr[i];
         int g = finalArr[i];
-        sum += abs(b % N - g % N);
-        sum += abs(b / N - g / N);
+        HDvalue += abs(b % N - g % N);
+        HDvalue += abs(b / N - g / N);
     }
-    node.HD = sum;
+    node.HD = HDvalue;
 }
 
 /*
