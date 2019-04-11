@@ -9,7 +9,8 @@
 #include "Helper.h"
 
 // for N=8, 15, 24
-#define FINAL_STATE {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}}
+#define FINAL_STATE {{0, 1}, {2, 3}}
+// #define FINAL_STATE {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}}
 // #define FINAL_STATE {{0, 1, 2, 3}, {4, 5, 6, 7}, {8, 9, 10, 11}, {12, 13, 14, 15}}
 // #define FINAL_STATE {{0, 1, 2, 3, 4}, {5, 6, 7, 8, 9}, {10, 11, 12, 13, 14}, {15, 16, 17, 18, 19}, {20, 21, 22, 23, 24}}
 
@@ -176,10 +177,14 @@ void IDAStar(Node root, int finalState[N][N]) {
 }
 
 int main(int argc, char const *argv[]) {
+    // int Start[N][N] = {
+    //     {1, 0, 2},
+    //     {3, 4, 5},
+    //     {6, 7, 8}
+    // };
     int Start[N][N] = {
-        {1, 0, 2},
-        {3, 4, 5},
-        {6, 7, 8}
+        {0, 3},
+        {2, 1}
     };
     // int Start[N][N] = {
     //     {3, 1, 2, 0}, {4, 5, 6, 7}, {8, 9, 10, 11}, {12, 13, 14, 15}
