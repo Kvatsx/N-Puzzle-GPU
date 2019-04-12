@@ -23,10 +23,10 @@ size = ["Bfs", "Dfs", "A*", "IDA*"]
 color = ['b', 'r', 'g', "y"]
 plt.figure()
 for i in range(len(size)):
-    plt.plot(x, y[i][:], color[i], label="Execution time of %s"%size[i])
+    plt.plot(x, y[i][:], marker='o', color=color[i], label="Execution time of %s"%size[i])
     plt.ylabel("Execution Time in us")
     plt.xlabel("Value of N in N-Puzzle Problem")
     plt.title("Execution time for all serial algorithms")
     plt.legend(loc='best')
-    # plt.show()
+# plt.show()
 plt.savefig("serial_graph.png")
