@@ -2,6 +2,12 @@ all: clean compile run
 
 cc: clean compile
 
+pas:
+	rm -f priorityQueue *~
+	nvcc -o priorityQueue priorityQueue.cu 
+	./priorityQueue
+
+
 cc-cuda: clean-cuda compile-cuda
 
 cuda: clean-cuda compile-cuda run-cuda
