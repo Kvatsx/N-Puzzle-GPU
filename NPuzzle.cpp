@@ -82,13 +82,13 @@ void BFS(Node root, int finalState[N][N]) {
         Node CurrentNode;
         CurrentNode = Q.front();
         Q.pop();
-        cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
+        // cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
         steps++;
         if (checkSolution(&CurrentNode, finalState) == 0) {
             cout << "No of nodes visited:\t" << steps << endl;
             return;
         }
-        break;
+
         GetNeighbours(&CurrentNode);
         for(int i=0; i<4; i++) {
             if (CurrentNode.Link[i].DT != 0) {
@@ -196,7 +196,7 @@ int main(int argc, char const *argv[]) {
     int FinalState[N][N] = FINAL_STATE;
     Node root, final;
     Fill(&root, 0, 0, Start, NULL);
-    temp_display(root.Data);
+    // temp_display(root.Data);
     Fill(&final, 0, 0, FinalState, NULL);
 
     void (*solveFunctionSet[])(Node, int[N][N]) = {

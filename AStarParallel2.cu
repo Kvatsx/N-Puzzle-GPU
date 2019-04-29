@@ -6,7 +6,6 @@
 using namespace std;
 
 #define FINAL_STATE {{0,1,2}, {3,4,5}, {6,7,8}}
-// #define FINAL_STATE {{1,2,3,4}, {5,6,7,8}, {9,10,11,12}, {13,14,15,0}}
 #define BLOCK_SIZE 512
 #define MAX_QUEUE_SIZE 1000
 
@@ -54,10 +53,8 @@ public:
 		// printf("asasdsa %d %d %d %d\n", i, val, this->heapArr[i], val < this->heapArr[i]);
 		// if(this->heapArr[i].DT != -1 && this->compareNode1(val, this->heapArr[i]))
 		// 	return;
-        // printf("sdfkhsdlfkjadshlfkajdhlfkjdsh %d %d\n", i, this->length);
-
 		this->heapArr[i] = val;
-                // printf("VAL%d %d\n", val.HD, i);
+        // printf("VAL%d %d\n", val.HD, i);
 		// printf("insertion %d", this->heapArr[i]);
 		while(i>1 && this->compareNode(i/2, i))
 		{
@@ -83,32 +80,33 @@ public:
     
 
 	CUDA_FUNC void max_heapify(int i) {
+
         while(true) {
+            int left = 2*i;
+            int right = 2*i+1;
+            int largest = 1;
+            if(left <= this->length && ! this->compareNode(left, i))
+                largest = left;
+            else
+                largest = i;
+            if(right <= this->length && ! this->compareNode(right, largest))
+                largest = right;
 
-    		int left = 2*i;
-    		int right = 2*i+1;
-    		int largest = 1;
-            // printf("dsdfgetwertrwet\n");
-    		if(left <= this->length && ! this->compareNode(left, i))
-    			largest = left;
-    		else
-    			largest = i;
-    		if(right <= this->length && ! this->compareNode(right, largest))
-    		    largest = right;
-
-    		if(largest != i) {
-    		    this->swap(i, largest);
-    		    i = largest;
-    		}
-            else {
+            if(largest != i)
+            {
+                this->swap(i, largest);
+                i = largest;
+            }
+            else
+            {
                 break;
             }
         }
+		
 	}
 
 	CUDA_FUNC Node top()
 	{
-
 		if(this->length == 0) {
 			Node NULL_NODE;
 			NULL_NODE.DT = -1;
@@ -118,14 +116,12 @@ public:
 		Node max = this->heapArr[1];
 
 		this->heapArr[1] = this->heapArr[this->length];
-
 		this->length--;
-
-		this->max_heapify(1);
+		max_heapify(1);
 		// for(int i=0; i<this->length; i++) {
 		// 	printf("%d", this->heapArr[i]);
 		// }
-        
+
 		return max;
 	}
 
@@ -190,6 +186,28 @@ CUDA_FUNC void UpdateHD(Node& node) {
  * Fill all required values of the struct
  */
 CUDA_FUNC void Fill(Node * node, int dt, int hd, int data[N][N], Node * link, int parentID) {
+    // printf("Arsh %d\n", dt);
+    // node->DT = dt;
+    // printf("Anu %d\n", node->DT);
+    // node->HD = -1;
+    // memset(node->UID, 0, strlen(node->UID));
+    // for(int i=0; i<N; i++) {
+    //     for(int j=0; j<N; j++) {
+    //         node->Data[i][j] = data[i][j];
+    //         string temp = to_string(node->Data[i][j]);
+    //         // node->UID[2*(N*i + j)] = temp;
+    //         // node->UID[2*(N*i + j)+1] = ':';
+    //         // node->UID += temp;
+    //         // node->UID += ":";
+    //         strcat(node->UID, temp.c_str());
+    //         strcat(node->UID, ":");
+    //     }
+    // }
+    // // node->UID[2*N*N] = '\0';
+    // node->parentID = parentID;
+    // node->Link = link;
+    // printf("Last %d\n", node->DT);
+
     node->DT = dt;
     node->HD = -1;
     for(int i=0; i<N; i++) {
@@ -640,60 +658,52 @@ CUDA_FUNC int checkSolution(Node * node, int *FinalState) {
     for (int i=0; i<N; i++) {
         for (int j=0; j<N; j++) {
             if (node->Data[i][j] != FinalState[i*N+j]) {
-                return 1;
+                return 0;
             }
         }
     }
-    return 0;
+    return 1;
 }
 
 #define K 11
-__device__ int continueWork = 1;
-__device__ int allQueueEmpty = 0;
 
-__global__ void parAStar(PriorityQueue *pqC, int *FinalState, int startStateHeuristic) {
+__global__ void parAStar(PriorityQueue *pqC, int *FinalState, int *Reached, int startStateHeuristic) {
 
-    int i = blockIdx.x * blockDim.x + threadIdx.x;
-    // printf("(%d) ", i);
-    int count = 0;
-
-    while(continueWork) {
-
-    	count+=1;
-        // printf("This is count of %d value %d\n", i, count);
-
-    	if(i < K) {
-            // printf("fdsdfgfd %d\n", pqC[i].getLength());
-    		Node val = pqC[i].top();
+	int i = blockIdx.x * blockDim.x + threadIdx.x;
+	
+	if(i < K) {
+		Node val = pqC[i].top();
+        if (val.DT != -1) {
+    		
             // printf("Extracted node in thread: i:%d DT:%d HD:%d UID:%s\n", i, val.DT, val.HD, val.UID);
-            if (val.DT != -1) {
-                // printf("Extracted node in thread: i:%d DT:%d HD:%d UID:%s\n", i, val.DT, val.HD, val.UID);
-                int matchFinal = checkSolution(&val, FinalState);
-                if (matchFinal == 0) {
-                    printf("Done the solution state\n");
-                    continueWork = 0;
-                }
-                // printf("sdfkhsdlfkjadshlfkajdhlfkjdsh\n");
-                // __syncthreads();
-                // printf("Generated Neighbours:\n");
-    			int count_neighbours = GetNeighbours(&val);
-    			for(int j=0; j<4; j++) {
-                    UpdateHD(val.Link[j]);
-                    if (val.Link[j].DT != 0/* && val.Link[j].DT + val.Link[j].HD <= startStateHeuristic*/) {
-                        // printf("UID - %s, HD - %d, DT - %d\n", val.Link[j].UID, val.Link[j].HD, val.Link[j].DT);
-                        pqC[(i*4+j)%K].insert(val.Link[j]);
-                        // printf("Print neighbour UID %s j %d inK %d HD %d DT %d\n", val.Link[j].UID, j, (i*4+j)%K, val.Link[j].HD, val.Link[j].DT);
-                        // printf("True or False %d\n", val.Link[j].parentID == 0);
-                  
-                    }
-                }
-                // printf("sdfkhsdlfkjadshlfkajdhlfkjdsh\n");
-    		}
-            // printf("(%d, %d)\n", i, continueWork);
+            // if (checkSolution(&val, FinalState) == 0) {
+            //     printf("Done the solution state\n");
+            //     Reached[i] = 1;
+            // }
+            // printf("Arsh\n");
+            Reached[i] = checkSolution(&val, FinalState);
+            // printf("Angad\n");
             __syncthreads();
-    	}
-        __syncthreads();
-    }
+            // printf("Generated Neighbours:\n");
+			int count_neighbours = GetNeighbours(&val);
+            // printf("DAN\n");
+			for(int j=0; j<4; j++) {
+                UpdateHD(val.Link[j]);
+                if (val.Link[j].DT != 0) {
+                    // printf("UID - %s, HD - %d, DT - %d\n", val.Link[j].UID, val.Link[j].HD, val.Link[j].DT);
+                    // printf("jfknsjkfn\n");
+                    pqC[(i*4+j)%K].insert(val.Link[j]);
+                    // printf("sfjfjnfjv\n");
+                    // printf("Print neighbour UID %s j %d inK %d HD %d DT %d\n", val.Link[j].UID, j, (i*4+j)%K, val.Link[j].HD, val.Link[j].DT);
+                    // printf("True or False %d\n", val.Link[j].parentID == 0);
+              
+                }
+            }
+            // printf("PPPP\n");
+		}
+		
+		__syncthreads();
+	}
 }
 
 int emptyPriorityQueue(PriorityQueue pq[K]) {
@@ -713,25 +723,11 @@ int main() {
 
 
 	int Start[N][N] = {
-        {4, 5, 1},
-        {0, 3, 2},
-        {6, 8, 7}
+        {4,5,1},
+        {0,3,2},
+        {6,8,7}
     };
 
-    // int Start[N][N] = {
-    //     {12, 1, 10, 2}, 
-    //     {7, 11, 4, 14}, 
-    //     {5, 0, 9, 15},
-    //     {8, 13, 6, 3}
-    // };
-
-
-    //     int Start[N][N] = {
-    //     {1, 2, 6, 3}, 
-    //     {4, 5, 7, 0}, 
-    //     {8, 9, 10, 11},
-    //     {12, 13, 14, 15}
-    // };
 
 
     int FinalState[N][N] = FINAL_STATE;
@@ -739,15 +735,15 @@ int main() {
     Fill(&root, 0, 0, Start, NULL, -1);
     Fill(&final, 0, 0, FinalState, NULL, -1);
     UpdateHD(root);
-    // printf("root.HD + root.DT = %d\n", root.HD + root.DT);
+    // printf("root.HD + root.DT = %d %d %d\n", root.HD + root.DT, root.HD, root.DT);
 
 	int k = K;
-	// int blocks = (k / BLOCK_SIZE) + 1;
-	// printf("%d %d\n", blocks, BLOCK_SIZE);
+	int blocks = (k / BLOCK_SIZE) + 1;
+	printf("%d %d\n", blocks, BLOCK_SIZE);
 
 	PriorityQueue pq[k];
 
-	// printf("%lu\n", sizeof(PriorityQueue));
+	printf("%lu\n", sizeof(PriorityQueue));
 	// printf("sdfsddsfsd");
 	for(int i=0; i<k; i++) {
 		pq[i] = PriorityQueue();
@@ -763,11 +759,6 @@ int main() {
     for(int i=0; i<K; Reached[i++]=0);
     int *Reached_device;
 
-    cudaEvent_t m_kernel_start, m_kernel_stop;
-    cudaEventCreate(&m_kernel_start);
-    cudaEventCreate(&m_kernel_stop);
-    cudaEventRecord(m_kernel_start);
-
 	cudaMalloc((void**)&pqC, sizeof(PriorityQueue)*k);
 	
     cudaMalloc((void**)&FinalState_device, N*N*sizeof(int));
@@ -777,7 +768,10 @@ int main() {
     cudaMemcpy(pqC, pq, sizeof(PriorityQueue)*k, cudaMemcpyHostToDevice);   
     float runningTime = 0;
     // int counter = 0;
-
+    int num_threads = 1;
+    while (!emptyPriorityQueue(pq) /*&& counter < 10*/) {
+        // counter += 1;
+        // cudaMemcpy(pqC, pq, sizeof(PriorityQueue)*k, cudaMemcpyHostToDevice);
         cudaMemcpy(FinalState_device, FinalState, N*N*sizeof(int), cudaMemcpyHostToDevice);
         cudaMemcpy(Reached_device, Reached,K*sizeof(int), cudaMemcpyHostToDevice);
         
@@ -787,26 +781,37 @@ int main() {
         cudaEventCreate(&start_kernel);
         cudaEventCreate(&stop_kernel);
         cudaEventRecord(start_kernel);
-        parAStar<<<1, K>>> (pqC, FinalState_device, root.HD + root.DT);
-
+        // printf("BAL %d\n", num_threads);
+        parAStar<<<1, K>>> (pqC, FinalState_device, Reached_device, root.HD + root.DT);
+        // if(num_threads < 30)
+        //     num_threads*=4;
         cudaEventRecord(stop_kernel);
         cudaEventSynchronize(stop_kernel);
         float totalTime;
         cudaEventElapsedTime(&totalTime, start_kernel, stop_kernel);
-        //printf("Tme %f\n", totalTime);
         runningTime += totalTime;
         
+        cudaMemcpy(Reached, Reached_device, K*sizeof(int), cudaMemcpyDeviceToHost);
 
-    cudaMemcpy(pq, pqC, sizeof(PriorityQueue)*k, cudaMemcpyDeviceToHost);
-    cudaEventRecord(m_kernel_stop);
-    cudaEventSynchronize(m_kernel_stop);
-    float k2_time;
-    cudaEventElapsedTime(&k2_time, m_kernel_start, m_kernel_stop);
+        int flag = 0;
+        for(int i=0; i<K; i++) {
+           if(Reached[i] == 1)
+            {
+                cout << "Solution State Reached\n ";
+                flag = 1;
+                break;
+            }
+        }
+        // cout<<endl;
 
+        if(flag == 1) {
+            break;
+        }
+
+        cudaMemcpy(pq, pqC, sizeof(PriorityQueue)*k, cudaMemcpyDeviceToHost);
+    }
 
     printf("\n\n\n\nFinal Running time %0.4f\n", runningTime);
-    cout  << "[Kernel+Memory]: " << k2_time << endl;
-
 
 
 	return 0;

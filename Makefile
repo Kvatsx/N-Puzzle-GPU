@@ -12,6 +12,10 @@ pas: clean
 	nvcc -std=c++11 -o AStarParallel AStarParallel.cu 
 	./AStarParallel
 
+2pas: clean
+	rm -f AStarParallel2 *~
+	nvcc -std=c++11 -o AStarParallel2 AStarParallel2.cu 
+	./AStarParallel2
 
 cc-cuda: clean-cuda compile-cuda
 
