@@ -7,7 +7,6 @@ pas:
 	nvcc -o priorityQueue priorityQueue.cu 
 	./priorityQueue
 
-
 cc-cuda: clean-cuda compile-cuda
 
 cuda: clean-cuda compile-cuda run-cuda

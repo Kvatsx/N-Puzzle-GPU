@@ -3,6 +3,7 @@
 
 // Size of the Grid
 #define N 4
+#define BlockSize 32;
 
 /* 
  * Structure of the node
@@ -15,7 +16,6 @@
 */
 struct Node {
     char UID[N*N*2];
-    // memset(UID, 0, strlen(UID));
     // string UID = "";
     int DT;
     int HD;
@@ -44,5 +44,6 @@ void temp_display(int data[N][N]);
 void GetNeighbours(Node * currentNode);
 
 int checkSolution(Node * node, int FinalState[N][N]);
+
 
 #endif
