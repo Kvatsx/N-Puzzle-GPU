@@ -2,10 +2,16 @@ all: clean compile run
 
 cc: clean compile
 
-pas:
+pas: clean
 	rm -f priorityQueue *~
 	nvcc -o priorityQueue priorityQueue.cu 
 	./priorityQueue
+
+1pas: clean
+	rm -f AStarParallel *~
+	nvcc -std=c++11 -o AStarParallel AStarParallel.cu 
+	./AStarParallel
+
 
 cc-cuda: clean-cuda compile-cuda
 
@@ -18,10 +24,10 @@ NPuzzle.o:
 Helper.o:
 	g++ -c -std=c++11 -o Helper.o Helper.cpp
 
-compile-cuda: NPuzzle-cuda.o Helper-cuda.o
-	nvcc -g -o NPuzzle-cuda NPuzzle-cuda.o Helper-cuda.o
-NPuzzle-cuda.o:
-	nvcc -c -std=c++11 -o NPuzzle-cuda.o NPuzzle.cu
+compile-cuda: priorityQueue.o Helper-cuda.o
+	nvcc -g -o priorityQueue priorityQueue.o Helper-cuda.o
+priorityQueue.o:
+	nvcc -c -std=c++11 -o priorityQueue.o priorityQueue.cu
 Helper-cuda.o:
 	nvcc -c -std=c++11 -o Helper-cuda.o Helper.cu
 
@@ -29,10 +35,10 @@ run:
 	./NPuzzle
 
 run-cuda:
-	./NPuzzle-cuda
+	./priorityQueue
 
 clean:
 	rm -f NPuzzle.o Helper.o NPuzzle *~
 
 clean-cuda:
-	rm -f NPuzzle-cuda NPuzzle-cuda.o Helper-cuda.o *~
+	rm -f priorityQueue priorityQueue.o Helper-cuda.o *~
