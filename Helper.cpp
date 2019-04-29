@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <cstring>
+#include <stdio.h>
+#include <stdlib.h>
 #include "Helper.h"
 
 using namespace std;
@@ -42,14 +44,20 @@ void toString(Node * node) {
 void Fill(Node * node, int dt, int hd, int data[N][N], Node * link) {
     node->DT = dt;
     node->HD = -1;
+    memset(node->UID, 0, strlen(node->UID));
     for(int i=0; i<N; i++) {
         for(int j=0; j<N; j++) {
             node->Data[i][j] = data[i][j];
-            node->UID[2*(N*i + j)] = data[i][j] + '0';
-            node->UID[2*(N*i + j)+1] = ' ';
+            string temp = to_string(node->Data[i][j]);
+            // node->UID[2*(N*i + j)] = temp;
+            // node->UID[2*(N*i + j)+1] = ':';
+            // node->UID += temp;
+            // node->UID += ":";
+            strcat(node->UID, temp.c_str());
+            strcat(node->UID, ":");
         }
     }
-    node->UID[2*N*N] = '\0';
+    // node->UID[2*N*N] = '\0';
     node->Link = link;
 }
 

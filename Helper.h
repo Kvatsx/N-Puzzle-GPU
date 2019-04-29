@@ -2,7 +2,7 @@
 #define HELPER_H
 
 // Size of the Grid
-#define N 2
+#define N 4
 
 /* 
  * Structure of the node
@@ -14,7 +14,9 @@
  * Link: Stores Next possible states.
 */
 struct Node {
-    char UID[2*N*N+1];
+    char UID[N*N*2];
+    // memset(UID, 0, strlen(UID));
+    // string UID = "";
     int DT;
     int HD;
     int Data[N][N];

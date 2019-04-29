@@ -9,9 +9,9 @@
 #include "Helper.h"
 
 // for N=8, 15, 24
-#define FINAL_STATE {{0, 1}, {2, 3}}
+// #define FINAL_STATE {{0, 1}, {2, 3}}
 // #define FINAL_STATE {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}}
-// #define FINAL_STATE {{0, 1, 2, 3}, {4, 5, 6, 7}, {8, 9, 10, 11}, {12, 13, 14, 15}}
+#define FINAL_STATE {{0, 1, 2, 3}, {4, 5, 6, 7}, {8, 9, 10, 11}, {12, 13, 14, 15}}
 // #define FINAL_STATE {{0, 1, 2, 3, 4}, {5, 6, 7, 8, 9}, {10, 11, 12, 13, 14}, {15, 16, 17, 18, 19}, {20, 21, 22, 23, 24}}
 
 using namespace std;
@@ -82,13 +82,13 @@ void BFS(Node root, int finalState[N][N]) {
         Node CurrentNode;
         CurrentNode = Q.front();
         Q.pop();
-        // cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
+        cout << "[" << steps << "]\t" << CurrentNode.UID << endl;
         steps++;
         if (checkSolution(&CurrentNode, finalState) == 0) {
             cout << "No of nodes visited:\t" << steps << endl;
             return;
         }
-
+        break;
         GetNeighbours(&CurrentNode);
         for(int i=0; i<4; i++) {
             if (CurrentNode.Link[i].DT != 0) {
@@ -182,13 +182,13 @@ int main(int argc, char const *argv[]) {
     //     {3, 4, 5},
     //     {6, 7, 8}
     // };
-    int Start[N][N] = {
-        {0, 3},
-        {2, 1}
-    };
     // int Start[N][N] = {
-    //     {3, 1, 2, 0}, {4, 5, 6, 7}, {8, 9, 10, 11}, {12, 13, 14, 15}
+    //     {0, 3},
+    //     {2, 1}
     // };
+    int Start[N][N] = {
+        {3, 1, 2, 0}, {4, 5, 6, 7}, {8, 9, 10, 11}, {12, 13, 14, 15}
+    };
     // int Start[N][N] = {
     //     {4, 1, 2, 3, 0}, {5, 6, 7, 8, 9}, {10, 11, 12, 13, 14}, {15, 16, 17, 18, 19}, {20, 21, 22, 23, 24}
     // };
@@ -196,6 +196,7 @@ int main(int argc, char const *argv[]) {
     int FinalState[N][N] = FINAL_STATE;
     Node root, final;
     Fill(&root, 0, 0, Start, NULL);
+    temp_display(root.Data);
     Fill(&final, 0, 0, FinalState, NULL);
 
     void (*solveFunctionSet[])(Node, int[N][N]) = {
