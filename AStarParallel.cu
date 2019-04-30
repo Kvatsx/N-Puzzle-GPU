@@ -647,7 +647,7 @@ CUDA_FUNC int checkSolution(Node * node, int *FinalState) {
     return 0;
 }
 
-#define K 11
+#define K 7
 __device__ int continueWork = 1;
 __device__ int allQueueEmpty = 0;
 

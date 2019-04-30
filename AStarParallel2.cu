@@ -675,7 +675,7 @@ __global__ void parAStar(PriorityQueue *pqC, int *FinalState, int *Reached, int 
 		Node val = pqC[i].top();
         if (val.DT != -1) {
     		
-            // printf("Extracted node in thread: i:%d DT:%d HD:%d UID:%s\n", i, val.DT, val.HD, val.UID);
+            printf("Extracted node in thread: i:%d DT:%d HD:%d UID:%s\n", i, val.DT, val.HD, val.UID);
             // if (checkSolution(&val, FinalState) == 0) {
             //     printf("Done the solution state\n");
             //     Reached[i] = 1;
